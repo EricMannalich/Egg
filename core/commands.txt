@@ -1,0 +1,64 @@
+#Windows
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned #Te da permiso a ejecutar aplicaciones por consola
+
+#Python
+pip install -r requirements.txt #Instala las librerias del archivo requirements.txt
+pip install virtualenv #Instala el creador de entornos virtuales de Python
+pip uninstall numpy #Desintala la libreria de numpy
+& ./env/Scripts/Activate.ps1 #Activa el entorno virtual
+virtualenv env #Crea un entorno virtual llamado env
+pip freeze #Muestra las librerias instaladas
+pip freeze > requirements.txt #Guarda las librerias en el archivo requirements.txt
+pip install --upgrade pip #Upradea el instalador
+isort . #Ordena importaciones
+
+#Docker
+docker pull #Instala una imagen de docker
+docker pull nginx:1.20.0-alpine
+docker pull postgres:13-alpine
+docker pull python:3.9-alpine
+docker-compose run django django-admin startproject core . #Crea una imagen de Docker con un nuevo proyecto en Django dentro de la carpeta core
+docker-compose up #Levanta la imagen de Docker
+docker-compose down #Cierra la imagen de Docker
+docker build --force-rm -t mapa-microbiano:0.3 . #Construye una imajen de Docker
+docker images #Lista las imagenes
+docker ps #Lista las imagenes levantadas
+docker exec -it django bash #Conecta con la imagen de Django
+docker exec -it postgres psql -U postgres #Conecta con la imagen de Postgres
+docker save core > core.tar #Salva la imagen de docker offline
+docker save core -o core.tar #Salva la imagen de docker offline
+docker load < core.tar #Carga la imagen de docker offline
+docker load -i python-3.7.tar #Carga la imagen de docker offline
+docker export $id > core-contenedor.tar #Salva el contenedor de docker offline
+docker export $id -o core-contenedor.tar #Salva el contenedor de docker offline
+docker import - core-contenedor < mapa-microbiano-contenedor.tar #Carga el contenedor de docker offline
+docker import - core-contenedor -i mapa-microbiano-contenedor.tar #Carga el contenedor de docker offline
+
+#Django
+django-admin startproject core #Crea un nuevo proyecto en Django
+python manage.py runserver 0.0.0.0:8000#Ejecuta el servidor de prueba de Django
+python manage.py makemigrations #Busca cambios en los modelos
+python manage.py migrate #Ejecutas las migraciones de Django
+python manage.py collectstatic --noinput #Extrae y junta los archivos estaticos del proyecto
+python manage.py createsuperuser #Crea un super usuario
+python manage.py shell #Accede a la consola de Django
+python manage.py flush #Destruulle todos los datos de la BD
+python manage.py dumpdata --natural-foreign --natural-primary -e contenttypes -e auth.Permission --indent 4 > db.json #Crea un backup de la BD llamado db.json
+python manage.py dumpdata --natural-foreign --natural-primary -e contenttypes -e auth.Permission --indent 2 --format yaml > db.yaml #Crea un backup de la BD llamado db.ymal
+python manage.py dumpdata user --exclude users.User --natural-foreign --natural-primary -e contenttypes -e auth.Permission --indent 2 --format yaml > db/usuario.yaml
+python manage.py loaddata db/location.yaml #Carga el backup de la BD llamado location_doc.yaml dentro de db
+
+#Postgres
+pdw #Permite salir a la raiz de la imagen
+\c postgres #Conecta con la DB postgres
+\d #Lista las tablas
+\q #Sale de la imagen de postgres
+\l #Lista los encoding de las BD 
+
+#Gunicorn
+gunicorn core.wsgi:application --bind localhost:8000
+gunicorn -c config/gunicorn/conf.py --bind :8000 --chdir core core.wsgi:application
+
+#Nginx
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/nginx-selfsigned.key -out /etc/ssl/certs/nginx-selfsigned.crt  #Crea los sertificados de seguridad ssl para conexcion segura https://
+openssl dhparam -out /etc/ssl/certs/dhparam.pem 2048 # Crea un grupo Diffie-Hellman fuerte, que se utiliza para negociar Perfect Forward Secrecy con los clientes.

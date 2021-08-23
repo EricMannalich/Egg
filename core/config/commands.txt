@@ -1,0 +1,33 @@
+#Windows
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned #Te da permiso a ejecutar aplicaciones por consola
+
+#Python
+pip install -r requirements.txt #Instala las librerias del archivo requirements.txt
+pip install virtualenv #Instala el creador de entornos virtuales de Python
+& ./env/Scripts/Activate.ps1 #Activa el entorno virtual
+virtualenv env #Crea un entorno virtual llamado env
+pip freeze #Muestra las librerias instaladas
+pip install --upgrade pip #Upradea el instalador
+isort . #Ordena importaciones
+
+#Docker
+docker pull #Instala una imagen de docker
+make build #Corre los comandos de build dentro del archivo Makefile
+docker-compose run django django-admin startproject core . #Crea una imagen de Docker con un nuevo proyecto en Django dentro de la carpeta core
+docker-compose up #Levanta la ultima imagen de Docker
+docker ps #Lista las imagenes levantadas
+docker exec -it django bash #Conecta con la imagen de Django
+docker exec -it postgres psql -U postgres #Conecta con la imagen de Postgres
+
+#Django
+django-admin startproject core #Crea un nuevo proyecto en Django
+python manage.py runserver #Ejecuta el servidor de prueba de Django
+python manage.py makemigrations #Busca cambios en los modelos
+python manage.py migrate #Ejecutas las migraciones de Django
+python manage.py createsuperuser #Crea un super usuario
+python manage.py shell #Accede a la consola de Django
+
+#Postgres
+\c postgres #Conecta con la DB postgres
+\d #Lista las tablas
+\q #Sale de la imagen de postgres

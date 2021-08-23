@@ -1,0 +1,60 @@
+version: '3.8'
+
+x-database-variables: &database-variables
+    POSTGRES_BD: Mi_base_de_datos
+    POSTGRES_USER: postgres
+    POSTGRES_PASSWORD: postgres
+
+x-app-variables: &app-variables
+    <<: *database-variables
+    POSTGRES_HOST: postgres
+    SECRET_KEY: "my_password"
+    ALLOWED_HOSTS: "*"
+    DEBUG: 0
+    CSRF_COOKIE_SECURE: 1
+    SESSION_COOKIE_SECURE: 1
+    SECURE_HSTS_SECONDS: 31536000
+    SECURE_SSL_REDIRECT: 1
+
+services:
+    postgres:
+        image: postgres:13.3
+        container_name: postgres
+        environment: *database-variables
+        volumes:
+            - postgres_data:/var/lib/postgresql/data/
+        ports: 
+            - "5430:5432"
+
+    django: 
+        image: core:latest
+        container_name: django
+        environment: *app-variables
+        volumes: 
+            - static:/code/static
+            - .:/code
+        ports: 
+            - "8000:8000"
+        command: bash -c "python manage.py migrate && python manage.py collectstatic --noinput && gunicorn -c config/gunicorn/conf.py --bind :8000 --chdir core core.wsgi:application"
+        depends_on:
+            - postgres
+
+    nginx:
+        image: nginx:1.20.0
+        container_name: nginx
+        ports:
+            - 80:80
+            - 443:443
+        volumes:
+            - ssl:/etc/ssl
+            - ./config/nginx/conf.d:/etc/nginx/conf.d
+            - static:/code/static
+        depends_on:
+            - django
+
+
+volumes:
+    .:
+    postgres_data:
+    ssl:
+    static:
